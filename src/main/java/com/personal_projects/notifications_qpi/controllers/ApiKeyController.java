@@ -18,15 +18,15 @@ public class ApiKeyController {
         this.apiKeyService = apiKeyService;
     }
 
-    @GetMapping(value = "/generate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/generate", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseAPI> generateApiKey() {
         String apiKey=apiKeyService.createApiKey();
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseAPI("Api key generated sucessfully", apiKey));
     }
 
-    @PutMapping(value = "/valid", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/valid", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseAPI> valiApiKey(@RequestBody  ValidApiKeyDTO apiKeyData) {
         boolean valid=apiKeyService.validateKey(apiKeyData.apiKey());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseAPI("Api key is status", valid));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI("Api key is status", valid));
     }
 }

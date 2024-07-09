@@ -6,13 +6,13 @@ import com.personal_projects.notifications_qpi.dtos.internal.ErrorResponse;
 import com.personal_projects.notifications_qpi.infrastructure.exceptions.UnauthorizedException;
 import com.personal_projects.notifications_qpi.services.ApiKeyService;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,11 +25,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final ApiKeyService apiKeyService;
     private final ObjectMapper objectMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public AuthenticationFilter(ApiKeyService apiKeyService, ObjectMapper objectMapper) {
+    public AuthenticationFilter(ApiKeyService apiKeyService, ObjectMapper objectMapper, PasswordEncoder passwordEncoder) {
         this.apiKeyService = apiKeyService;
         this.objectMapper = objectMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private final Set<String> publicPaths = new HashSet<>(List.of(
@@ -46,7 +48,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws  IOException {
         try {
             String apiKey = extractApiKey(request);
 
