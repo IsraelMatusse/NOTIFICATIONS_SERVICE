@@ -1,4 +1,4 @@
-package com.personal_projects.notifications_qpi.config;
+package com.personal_projects.notifications_qpi.infrastructure.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

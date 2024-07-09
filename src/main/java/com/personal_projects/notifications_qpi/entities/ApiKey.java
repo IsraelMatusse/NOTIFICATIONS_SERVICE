@@ -15,18 +15,18 @@ import java.time.LocalDateTime;
 public class ApiKey {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String apiKeyValue;
     private LocalDateTime expirationDate;
     private LocalDateTime createdAt;
     private boolean status;
 
-    public ApiKey(String apiKeyValue, LocalDateTime expirationDate){
+    public ApiKey(String apiKeyValue, LocalDateTime expirationDate, String id){
         this.apiKeyValue = apiKeyValue;
         this.expirationDate=expirationDate;
         this.createdAt=LocalDateTime.now();
         this.status=true;
+        this.id=id;
     }
 
 }

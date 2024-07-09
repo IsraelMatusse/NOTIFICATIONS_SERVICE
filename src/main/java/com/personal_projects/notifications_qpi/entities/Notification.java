@@ -24,6 +24,7 @@ public class Notification {
     private String subject;
     private String recipient;
     private LocalDateTime sendDate;
+    private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
     @Enumerated(EnumType.STRING)
@@ -37,5 +38,6 @@ public class Notification {
         this.status=NotificationStatus.PENDING;
         this.sendDate=notificationData.sendDate();
         this.recipient=notificationData.recipient();
+        this.createdAt=LocalDateTime.now();
     }
 }

@@ -4,6 +4,8 @@ import com.personal_projects.notifications_qpi.dtos.request.NotificationCreateDT
 import com.personal_projects.notifications_qpi.entities.Notification;
 import com.personal_projects.notifications_qpi.repositories.NotificationRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,15 @@ public class NotificationService {
     public Notification findById(String id) {
         return notificationRepo.findById(id).orElseThrow(() -> new RuntimeException("Notification not found"));
     }
+    @Cacheable("notifications")
     public List<Notification>findAll(){
-
-        return notificationRepo.findAll();
+        return notificationRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+    }
+    @CacheEvict(value = "notifications", allEntries = true)
+    public void clearCache() {
     }
 
+    @CacheEvict(value = "notifications", allEntries = true)
     public void createNotification(NotificationCreateDTO notificationData){
         Notification notification = new Notification(notificationData);
         notificationRepo.save(notification);

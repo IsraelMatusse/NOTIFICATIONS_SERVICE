@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ApiKeyService {
@@ -38,14 +39,31 @@ public class ApiKeyService {
     public String createApiKey(){
         String key= ApiKeyGenerator.generateApiKey();
         String hashedKey=passwordEncoder.encode(key);
+        String uuid = UUID.randomUUID().toString(); // Gerar UUID
         LocalDateTime expirationDate=LocalDateTime.now().plusDays(1);
-        ApiKey apiKey= new ApiKey(hashedKey, expirationDate);
+        ApiKey apiKey= new ApiKey(hashedKey, expirationDate, uuid);
         this.create(apiKey);
-        return  key;
+        return uuid + ":" + key; // Retorna UUID concatenado com a chave
     }
-    public boolean validateKey(String rawApiKey) {
-        return apiKeyRepo.findAll().stream()
-                .anyMatch(apiKey -> passwordEncoder.matches(rawApiKey, apiKey.getApiKeyValue()));
+    public boolean validateKey(String rawApiKeyWithUuid) {
+        // Separar o UUID da chave original
+        String[] parts = rawApiKeyWithUuid.split(":");
+        if (parts.length != 2) {
+            return false;
+        }
+        String uuid = parts[0];
+        String rawApiKey = parts[1];
+
+        // Buscar a chave pelo UUID
+        Optional<ApiKey> apiKeyOpt = this.apiKeyRepo.findById(uuid);
+        if (apiKeyOpt.isEmpty()) {
+            return false;
+        }
+
+        ApiKey apiKey = apiKeyOpt.get();
+        // Validar a chave hasheada
+        return passwordEncoder.matches(rawApiKey, apiKey.getApiKeyValue());
     }
+
 
 }
