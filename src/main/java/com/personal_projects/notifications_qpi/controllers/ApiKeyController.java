@@ -1,8 +1,10 @@
 package com.personal_projects.notifications_qpi.controllers;
 
 import com.personal_projects.notifications_qpi.dtos.internal.ResponseAPI;
+import com.personal_projects.notifications_qpi.dtos.request.ApiKeyCreateDTO;
 import com.personal_projects.notifications_qpi.dtos.request.ValidApiKeyDTO;
 import com.personal_projects.notifications_qpi.services.ApiKeyService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,8 @@ public class ApiKeyController {
     }
 
     @PostMapping(value = "/generate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseAPI> generateApiKey() {
-        String apiKey=apiKeyService.createApiKey();
+    public ResponseEntity<ResponseAPI> generateApiKey(@RequestBody @Valid ApiKeyCreateDTO apiKeyData) {
+        String apiKey=apiKeyService.createApiKey(apiKeyData);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseAPI("Api key generated sucessfully", apiKey));
     }
 

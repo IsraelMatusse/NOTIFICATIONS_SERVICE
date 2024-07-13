@@ -1,5 +1,6 @@
 package com.personal_projects.notifications_qpi.services;
 
+import com.personal_projects.notifications_qpi.dtos.request.ApiKeyCreateDTO;
 import com.personal_projects.notifications_qpi.entities.ApiKey;
 import com.personal_projects.notifications_qpi.infrastructure.utils.ApiKeyGenerator;
 import com.personal_projects.notifications_qpi.repositories.ApiKeyRepo;
@@ -36,17 +37,28 @@ public class ApiKeyService {
         return apiKeyRepo.findById(id).orElseThrow(()-> new RuntimeException("Api key not found"));
     }
 
-    public String createApiKey(){
+    public String createApiKey(ApiKeyCreateDTO apiKeyData){
         String key= ApiKeyGenerator.generateApiKey();
         String hashedKey=passwordEncoder.encode(key);
-        String uuid = UUID.randomUUID().toString(); // Gerar UUID
+        String uuid = UUID.randomUUID().toString();
         LocalDateTime expirationDate=LocalDateTime.now().plusDays(1);
-        ApiKey apiKey= new ApiKey(hashedKey, expirationDate, uuid);
+        String userEmail=apiKeyData.email();
+        ApiKey apiKey= new ApiKey(hashedKey, expirationDate, uuid, userEmail);
         this.create(apiKey);
-        return uuid + ":" + key; // Retorna UUID concatenado com a chave
+        return uuid + ":" + key;
     }
+
+    public ApiKey getApiKeyFromRawApiKey(String rawApiKeyWithUuid){
+        String[] parts = rawApiKeyWithUuid.split(":");
+        if (parts.length != 2) {
+            return null;
+        }
+        String uuid = parts[0];
+        Optional<ApiKey> apiKeyOpt = this.apiKeyRepo.findById(uuid);
+        return apiKeyOpt.orElse(null);
+    }
+
     public boolean validateKey(String rawApiKeyWithUuid) {
-        // Separar o UUID da chave original
         String[] parts = rawApiKeyWithUuid.split(":");
         if (parts.length != 2) {
             return false;
@@ -54,15 +66,13 @@ public class ApiKeyService {
         String uuid = parts[0];
         String rawApiKey = parts[1];
 
-        // Buscar a chave pelo UUID
         Optional<ApiKey> apiKeyOpt = this.apiKeyRepo.findById(uuid);
         if (apiKeyOpt.isEmpty()) {
             return false;
         }
 
         ApiKey apiKey = apiKeyOpt.get();
-        // Validar a chave hasheada
-        return passwordEncoder.matches(rawApiKey, apiKey.getApiKeyValue());
+        return apiKey.getExpirationDate().isAfter(LocalDateTime.now()) && passwordEncoder.matches(rawApiKey, apiKey.getApiKeyValue());
     }
 
 

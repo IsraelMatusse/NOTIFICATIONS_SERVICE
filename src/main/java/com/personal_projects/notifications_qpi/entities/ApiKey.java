@@ -19,14 +19,17 @@ public class ApiKey {
     private String apiKeyValue;
     private LocalDateTime expirationDate;
     private LocalDateTime createdAt;
+    private String userEmail;
     private boolean status;
 
-    public ApiKey(String apiKeyValue, LocalDateTime expirationDate, String id){
+
+    public ApiKey(String apiKeyValue, LocalDateTime expirationDate, String id, String userEmail){
         this.apiKeyValue = apiKeyValue;
         this.expirationDate=expirationDate;
         this.createdAt=LocalDateTime.now();
         this.status=true;
         this.id=id;
+        this.userEmail=userEmail;
     }
 
 }
