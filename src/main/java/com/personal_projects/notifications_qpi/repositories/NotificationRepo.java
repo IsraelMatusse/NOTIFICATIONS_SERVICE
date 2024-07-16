@@ -15,4 +15,6 @@ public interface NotificationRepo  extends JpaRepository<Notification, String> {
 
     List<Notification>findByRecipient(String recipient);
     List<Notification>findByStatusAndSendDateLessThanEqual(NotificationStatus status, LocalDateTime sendDate);
+    List<Notification>findByStatusAndSendDateLessThanEqualAndChannel(NotificationStatus status, LocalDateTime sendDate, Channel channel);
+
 }
