@@ -3,6 +3,7 @@ package com.personal_projects.notifications_qpi.controllers;
 import com.personal_projects.notifications_qpi.dtos.internal.ResponseAPI;
 import com.personal_projects.notifications_qpi.dtos.request.ApiKeyCreateDTO;
 import com.personal_projects.notifications_qpi.dtos.request.ValidApiKeyDTO;
+import com.personal_projects.notifications_qpi.infrastructure.validation.RateLimited;
 import com.personal_projects.notifications_qpi.services.ApiKeyService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class ApiKeyController {
     }
 
     @GetMapping(value = "/valid", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RateLimited
     public ResponseEntity<ResponseAPI> valiApiKey(@RequestBody  ValidApiKeyDTO apiKeyData) {
         boolean valid=apiKeyService.validateKey(apiKeyData.apiKey());
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseAPI("Api key is status", valid));

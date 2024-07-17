@@ -46,10 +46,8 @@ public class ScheduleNotification {
                         logger.error("Error in sendEmailSchedule: " + throwable.getMessage());
                         return null;
                     });
-
             futures.add(future);
         }
-
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 

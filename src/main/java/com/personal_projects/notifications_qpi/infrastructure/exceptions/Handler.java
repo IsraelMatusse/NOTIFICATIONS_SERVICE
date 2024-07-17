@@ -85,6 +85,12 @@ public class Handler {
         return new ResponseAPI(ex.getMessage(),  null);
     }
 
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseAPI handleTooMany(HttpServletRequest request, RateLimitExceededException ex) {
+        return new ResponseAPI(ex.getMessage(),  null);
+    }
+
 
 
 
