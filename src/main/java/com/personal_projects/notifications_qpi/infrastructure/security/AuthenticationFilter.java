@@ -38,7 +38,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/api-key/generate",
-            "/api-key/valid"
+            "/api-key/valid",
+            "actuator/**"
     ));
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     @Override

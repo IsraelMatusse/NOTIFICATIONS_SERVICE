@@ -1,0 +1,10 @@
+resilience4j:
+  retry:
+    instances:
+      order-service:
+        max-attempts: 2
+        wait-duration: 30s
+        retry-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+        ignore-exceptions:
+          - org.springframework.web.client.ResourceAccessException
