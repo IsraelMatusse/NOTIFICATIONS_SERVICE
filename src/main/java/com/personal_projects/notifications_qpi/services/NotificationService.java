@@ -6,6 +6,7 @@ import com.personal_projects.notifications_qpi.entities.ApiKey;
 import com.personal_projects.notifications_qpi.entities.Notification;
 import com.personal_projects.notifications_qpi.infrastructure.enums.Channel;
 import com.personal_projects.notifications_qpi.infrastructure.enums.NotificationStatus;
+import com.personal_projects.notifications_qpi.infrastructure.exceptions.NotFoundException;
 import com.personal_projects.notifications_qpi.infrastructure.exceptions.UnprocessableEntityException;
 import com.personal_projects.notifications_qpi.repositories.NotificationRepo;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,10 @@ public class NotificationService {
 
     public List<NotificationResponseDto>getNotificationsRes(){
         return notificationRepo.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(NotificationResponseDto::new).toList();
+    }
+
+    public NotificationResponseDto findByIdRes(String id) throws NotFoundException {
+        return new NotificationResponseDto(this.findById(id));
     }
 
     @CacheEvict(value = "notifications", allEntries = true)

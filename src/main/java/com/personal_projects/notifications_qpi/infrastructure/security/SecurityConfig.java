@@ -42,7 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/api-key/generate",
-                                "/api-key/valid")
+                                "/api-key/valid",
+                                "/api/notifications/emails")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

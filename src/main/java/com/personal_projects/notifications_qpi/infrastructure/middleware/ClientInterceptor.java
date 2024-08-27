@@ -17,7 +17,8 @@ public class ClientInterceptor implements HandlerInterceptor {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/api-key/generate",
-            "/api-key/valid"
+            "/api-key/valid",
+            "/api/notifications/emails"
     ));
     @Override
     public boolean preHandle(@NotNull  HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

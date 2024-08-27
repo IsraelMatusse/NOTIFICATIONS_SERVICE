@@ -17,14 +17,14 @@ public class RateLimittingAspect {
     private static final ConcurrentHashMap<String, RateLimit> rateLimits = new ConcurrentHashMap<>();
     private static final int REQUEST_LIMIT = 5;
     private static final long TIME_WINDOW = 30000; // 30 segundos
-    private static final long BLOCK_DURATION = 60000;
+    private static final long BLOCK_DURATION = 60000; //1 minuto
 
     @Before("@annotation(com.personal_projects.notifications_qpi.infrastructure.validation.RateLimited)")
     public void beforeRequest() throws RateLimitExceededException {
         String clientId = ClientContext.getCurrentTenant();
         RateLimit rateLimit = rateLimits.computeIfAbsent(clientId, k -> new RateLimit());
         if (!rateLimit.tryAcquire()) {
-            throw new RateLimitExceededException("Rate limit exceeded");
+            throw new RateLimitExceededException("Rate limit exceded");
         }
     }
 
